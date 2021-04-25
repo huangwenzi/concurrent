@@ -1,1 +1,0 @@
-mysqldiff --skip-table-options --server1=root:123456@127.0.0.1:3306 --server2=root:123456@127.0.0.1:3306 --force --difftype=sql test_1:test_2
