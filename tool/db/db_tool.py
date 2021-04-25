@@ -17,6 +17,7 @@ class TableObj():
     sql_str = ""    # 原sql
     table_name = "" # 表名
     key_map = {}    # key:字段
+
     key_list = {}   # 普通键
     primary_key = []# 主键
     unique_key = {} # 联合键
