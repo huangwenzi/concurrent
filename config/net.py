@@ -10,3 +10,8 @@ web_svr_cfg = {
 
 # 负载均衡地址
 load_balance_addr = "http://127.0.0.1:11000"
+
+# 客户端配置
+client = {
+    "thread_num" : 100
+}
