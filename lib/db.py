@@ -167,7 +167,9 @@ class DbMgr():
 
 # 创建单例
 def set_ins(cfg_name):
-    instanceMgrMd.instance_mgr.set_ins("dbMgr", DbMgr(cfg_name))
+    db_mgr = DbMgr(cfg_name)
+    instanceMgrMd.instance_mgr.set_ins("dbMgr", db_mgr)
+    return db_mgr
 # 获取单例
 def get_ins():
     instanceMgrMd.instance_mgr.get_ins("dbMgr")
