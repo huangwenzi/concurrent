@@ -4,7 +4,7 @@ import MySQLdb
 
 import config.db_cfg as dbCfg
 import tool.db.db_tool as dbToolMd
-
+import lib.instance_mgr as instanceMgrMd
 
 # mysql字符串类型
 mysql_str_type = ["CHAR", "VARCHAR", "TINYBLOB", "TINYTEXT", "BLOB", "TEXT"
@@ -23,8 +23,8 @@ class DbMgr():
     table_map = {}
 
     # 初始化
-    def __init__(self, db_name):
-        db_cfg = dbCfg.db_map[db_name]
+    def __init__(self, cfg_name):
+        db_cfg = dbCfg.db_map[cfg_name]
         db = MySQLdb.Connect(
             host = db_cfg["host"], 
             user = db_cfg["user_name"], 
@@ -164,6 +164,13 @@ class DbMgr():
             self.db.commit()
             return True
         return False
+
+# 创建单例
+def set_ins(cfg_name):
+    instanceMgrMd.instance_mgr.set_ins("dbMgr", DbMgr(cfg_name))
+# 获取单例
+def get_ins():
+    instanceMgrMd.instance_mgr.get_ins("dbMgr")
 
 ## db测试
 # import tool.db.main as dbMainMd
