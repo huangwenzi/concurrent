@@ -1,5 +1,5 @@
 import MySQLdb
-
+import sys
 
 
 import config.db_cfg as dbCfg
@@ -23,8 +23,8 @@ class DbMgr():
     table_map = {}
 
     # 初始化
-    def __init__(self, cfg_name):
-        db_cfg = dbCfg.db_map[cfg_name]
+    def __init__(self, db_cfg):
+        # db_cfg = dbCfg.db_map[cfg_name]
         db = MySQLdb.Connect(
             host = db_cfg["host"], 
             user = db_cfg["user_name"], 
@@ -165,14 +165,16 @@ class DbMgr():
             return True
         return False
 
-# 创建单例
-def set_ins(cfg_name):
-    db_mgr = DbMgr(cfg_name)
-    instanceMgrMd.instance_mgr.set_ins("dbMgr", db_mgr)
-    return db_mgr
 # 获取单例
 def get_ins():
-    instanceMgrMd.instance_mgr.get_ins("dbMgr")
+    if not instanceMgrMd.instance_mgr.get_ins("dbMgr"):
+        cfg = dbCfg.db_map[sys.argv[2]]
+        db_mgr = DbMgr(cfg)
+        instanceMgrMd.instance_mgr.set_ins("dbMgr", db_mgr)
+        return db_mgr
+    return instanceMgrMd.instance_mgr.get_ins("dbMgr")
+
+
 
 ## db测试
 # import tool.db.main as dbMainMd

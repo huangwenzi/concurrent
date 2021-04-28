@@ -89,7 +89,7 @@ class ClientMgr(object):
         
     # 获取数据
     def get(self, key):
-        send_str = "%s/getVal?key=%s"%(self.web_svr_path, key)
+        send_str = "%s/get_val?key=%s"%(self.web_svr_path, key)
         ret = request.Request(send_str)
         response = request.urlopen(ret)
         read_str = response.read().decode('utf-8')

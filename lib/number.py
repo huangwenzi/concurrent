@@ -32,4 +32,4 @@ def consume_cpu_time(consume_time):
 # 上面的改进版
 def consume_cpu_time_1(consume_time):
     # 差不多6500000 ~= 1秒
-    positive_integer_sum(consume_time * 6500000)
+    positive_integer_sum(int(consume_time * 6500000))
