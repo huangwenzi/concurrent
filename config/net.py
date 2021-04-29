@@ -19,6 +19,7 @@ load_balance_cfg = {
     "host" : "127.0.0.1"
     , "port" : 11000
     , "sync_time" : 5 # 同步时间
+    , "protocol_weight" : 1         # 请求权重 请求空闲服务器时加待处理消息数
 }
 
 # 客户端配置

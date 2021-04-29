@@ -4,6 +4,7 @@ from os import remove
 
 
 import lib.instance_mgr as instanceMgrMd
+import config.net as netCfg
 
 class WebSvr():
     svr_id = 0  
@@ -110,7 +111,7 @@ class LoadBalanceSvr():
         web_svr = self.get_min_svr()
         if not web_svr:
             return False
-        self.set_msg_num(web_svr.svr_id, web_svr.get_msg_num() + 1)
+        self.set_msg_num(web_svr.svr_id, web_svr.get_msg_num() + netCfg.load_balance_cfg["protocol_weight"])
         self.show_svr_list()
         data = {
             "svr_id" : web_svr.svr_id
