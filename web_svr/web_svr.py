@@ -21,26 +21,33 @@ class WebSvr(object):
     sync_time = 0           # 同步时间
     load_balance_path = ""  # 同步地址
     
+    task_count = 0          # 完成的任务计数
+    
     def __init__(self, cfg):
-        self.svr_id = cfg["svr_id"]
+        self.svr_id = int(cfg["svr_id"])
         self.msg_num = 0
         load_balance_cfg = netCfg.load_balance_cfg
         self.sync_time = load_balance_cfg["sync_time"]
         self.load_balance_path = "http://{0}:{1}/set_msg_num".format(load_balance_cfg["host"], load_balance_cfg["port"])
-        
+        self.task_count = 0
         
         
     ## 获取函数
     # 获取数据
     def get_val(self, query):
+        self.msg_num += 1
         try:
             # 模拟计算消耗0.1秒
             numMd.consume_cpu_time_1(0.1)
+            # time.sleep(1)
             key = query.key
             val = dbMgr.select("test", key) or "None"
+            self.msg_num -= 1
+            self.task_count += 1
             return val
         except Exception as e:
             print('data_lib getVal, error:', e)
+            self.msg_num -= 1
             return "-1"
     
     ## 修改函数
@@ -53,6 +60,7 @@ class WebSvr(object):
                 data = {
                     "svr_id" : web_svr.svr_id
                     , "msg_num" : web_svr.msg_num
+                    , "time" : time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 }
                 requests.post(web_svr.load_balance_path, data=json.dumps(data),headers=headers)
                 time.sleep(web_svr.sync_time)
@@ -68,4 +76,4 @@ def get_ins():
         web_svr = WebSvr(cfg)
         instanceMgrMd.instance_mgr.set_ins("web_svr", web_svr)
         return web_svr
-    instanceMgrMd.instance_mgr.get_ins("web_svr")
+    return instanceMgrMd.instance_mgr.get_ins("web_svr")

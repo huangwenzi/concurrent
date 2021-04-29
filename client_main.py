@@ -1,5 +1,4 @@
 
-import time
 
 
 
@@ -10,8 +9,8 @@ import client.client_mgr as clientMgrMd
 
 
 
-# 创建客户端管理器单例
-client_mgr = clientMgrMd.set_ins("1")
+# 获取客户端管理器单例
+client_mgr = clientMgrMd.get_ins()
 
 while True:
     # 获取参数

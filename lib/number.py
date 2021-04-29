@@ -21,13 +21,9 @@ def positive_integer_sum(n):
 # 空运行n秒
 # 其实没啥用，cpu是占了，但是没有阻碍其它线程调这个函数性能
 def consume_cpu_time(consume_time):
-    now = time.time()
-    print(now)
-    stop_time = now + consume_time
+    stop_time = time.time() + consume_time
     while True:
-        now = time.time()
-        if now >= stop_time:
-            print(now)
+        if time.time() >= stop_time:
             return
 # 上面的改进版
 def consume_cpu_time_1(consume_time):

@@ -6,6 +6,11 @@ web_svr_cfg = {
         "svr_id" : 1
         , "host" : "127.0.0.1"
         , "port" : 10001
+    },
+    "2" : {
+        "svr_id" : 2
+        , "host" : "127.0.0.1"
+        , "port" : 10002
     }
 }
 
@@ -13,7 +18,7 @@ web_svr_cfg = {
 load_balance_cfg = {
     "host" : "127.0.0.1"
     , "port" : 11000
-    , "sync_time" : 0.1 # 同步时间
+    , "sync_time" : 5 # 同步时间
 }
 
 # 客户端配置

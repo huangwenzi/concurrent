@@ -10,8 +10,7 @@ import time
 
 import web_svr.web_svr as WebSvrMd
 import config.net as netCfg
-import config.db_cfg as dbCfg
-import lib.db as dbMd
+
 
 # 服务器单例
 web_svr_ins = WebSvrMd.get_ins()
@@ -21,10 +20,7 @@ web_svr_ins = WebSvrMd.get_ins()
 # 获取值
 @get('/get_val')
 def get_val():
-    web_svr_ins.msg_num += 1
-    time.sleep(3)
     key = web_svr_ins.get_val(request.query)
-    web_svr_ins.msg_num -= 1
     return key
 
 
@@ -51,7 +47,7 @@ def svr_run():
     # 通知负载均衡，服务器准备就绪
     headers = {'content-type':'application/json'}
     data = {
-        'svr_id' : svr_id
+        'svr_id' : int(svr_id)
         , 'host': "127.0.0.1"
         , 'port': cfg["port"]
     }
@@ -61,8 +57,9 @@ def svr_run():
     web_svr_ins.sync_msg_num_thread()
     
     # 运行服务器
-    app_argv = SessionMiddleware(default_app(), session_opts)
-    run(app=app_argv, host=cfg["host"], port=cfg["port"], debug=True, reloader=True, server='gevent')
+    # app_argv = SessionMiddleware(default_app(), session_opts)
+    # run(app=app_argv, host=cfg["host"], port=cfg["port"], debug=True, reloader=True, server='gevent')
+    run(host=cfg["host"], port=cfg["port"], debug=True, reloader=True, server='paste')
     
     
 # py web_svr_main.py 服务器配置 数据库配置

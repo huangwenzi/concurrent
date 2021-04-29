@@ -20,7 +20,7 @@ def add_ser():
     load_balance_svr_ins.protocol_add_web_svr(data)
     return 
 
-# 添加新的服务器
+# 设置服务器待处理消息数
 @post('/set_msg_num')
 def set_msg_num():
     data = request.json
@@ -49,8 +49,9 @@ def svr_run():
     
 
     # 运行服务器
-    app_argv = SessionMiddleware(default_app(), session_opts)
-    run(app=app_argv, host=cfg["host"], port=cfg["port"], debug=True, reloader=True, server='gevent')
+    # app_argv = SessionMiddleware(default_app(), session_opts)
+    # run(app=app_argv, host=cfg["host"], port=cfg["port"], debug=True, reloader=True, server='gevent')
+    run(host=cfg["host"], port=cfg["port"], debug=True, reloader=True, server='paste')
     
     
     
