@@ -64,18 +64,16 @@ class LoadBalanceSvr():
         
     
     
-    ## 修改函数
-    # 设置待处理协议数
-    def set_msg_num(self, svr_id, msg_num):
-        web_svr = self.get_web_svr(svr_id)
-        if web_svr:
-            web_svr.set_msg_num(msg_num)
-    
+    ## 修改函数  
     # 添加web_svr
     def add_web_svr(self, svr_id, host, port):
         # 如果存在，删除旧服务器信息
-        if self.get_web_svr(svr_id):
-            self.del_web_svr(svr_id)
+        web_svr = self.get_web_svr(svr_id)
+        if web_svr:
+            web_svr.svr_id = svr_id
+            web_svr.host = host
+            web_svr.port = port
+            return
         
         web_svr = WebSvr(svr_id, host, port)
         self.svr_list.append(web_svr)
@@ -103,7 +101,20 @@ class LoadBalanceSvr():
     def protocol_set_msg_num(self, data):
         svr_id = data["svr_id"]
         msg_num = data["msg_num"]
-        self.set_msg_num(svr_id, msg_num)
+        web_svr = self.get_web_svr(svr_id)
+        if web_svr:
+            web_svr.set_msg_num(msg_num)
+        else:
+            # 服不存在，重新添加
+            host = data["host"]
+            port = data["port"]
+            self.add_web_svr(svr_id, host, port)
+            self.protocol_set_msg_num(data)
+        
+    # 客户端websvr连接失败
+    def protocol_web_svr_fail(self, data):
+        svr_id = data["svr_id"]
+        self.del_web_svr(svr_id)
         
         
     # 获取空闲服务器
@@ -111,7 +122,7 @@ class LoadBalanceSvr():
         web_svr = self.get_min_svr()
         if not web_svr:
             return False
-        self.set_msg_num(web_svr.svr_id, web_svr.get_msg_num() + netCfg.load_balance_cfg["protocol_weight"])
+        web_svr.set_msg_num(web_svr.get_msg_num() + netCfg.load_balance_cfg["protocol_weight"])
         self.show_svr_list()
         data = {
             "svr_id" : web_svr.svr_id

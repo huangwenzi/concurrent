@@ -27,10 +27,16 @@ def set_msg_num():
     load_balance_svr_ins.protocol_set_msg_num(data)
     return 
 
+# 客户端websvr连接失败
+@post('/web_svr_fail')
+def web_svr_fail():
+    return load_balance_svr_ins.protocol_web_svr_fail(data = request.json)
+
 # 获取空闲服务器
 @get('/get_min_svr')
 def get_min_svr():
     return load_balance_svr_ins.protocol_get_min_svr()
+
 
 
 # 服务器

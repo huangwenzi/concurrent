@@ -157,7 +157,20 @@ class ClientMgr(object):
             return False
         
         data = json.loads(read_str)
-        return ThreadTask(data)
+        thread_task = ThreadTask(data)
+        
+        # 尝试连接
+        send_str = "%s/check_svr"%(thread_task.web_svr_path)
+        ret = request.Request(send_str)
+        response = request.urlopen(ret)
+        ret = response.read().decode('utf-8')
+        if ret != "1":
+            # 通知负载均衡
+            headers = {'content-type':'application/json'}
+            data = {"svr_id" : thread_task.svr_id}
+            requests.post("{0}/web_svr_fail".format(self.load_balance_svr_path), data=json.dumps(data),headers=headers)
+            return 
+        return thread_task
     
         
     

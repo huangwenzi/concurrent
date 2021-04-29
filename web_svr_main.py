@@ -23,6 +23,11 @@ def get_val():
     key = web_svr_ins.get_val(request.query)
     return key
 
+# 客户端尝试连接
+@get('/check_svr')
+def check_svr():
+    return "1"
+
 
 
 
@@ -42,19 +47,9 @@ def svr_run():
     svr_id = sys.argv[1]
     # cfg = netCfg.web_svr_cfg["1"]
     cfg = netCfg.web_svr_cfg[svr_id]
-    load_balance_cfg = netCfg.load_balance_cfg
     
     # 通知负载均衡，服务器准备就绪
-    headers = {'content-type':'application/json'}
-    data = {
-        'svr_id' : int(svr_id)
-        , 'host': "127.0.0.1"
-        , 'port': cfg["port"]
-    }
-    path = "http://{0}:{1}/add_ser".format(load_balance_cfg["host"], str(load_balance_cfg["port"]))
-    requests.post(path, data=json.dumps(data),headers=headers)
-    time.sleep(0.1)
-    web_svr_ins.sync_msg_num_thread()
+    web_svr_ins.connect_load_balance_thread()
     
     # 运行服务器
     # app_argv = SessionMiddleware(default_app(), session_opts)
