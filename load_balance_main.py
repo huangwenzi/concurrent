@@ -11,26 +11,25 @@ load_balance_svr_ins = loadBalanceSvrMd.get_ins()
 # 添加新的服务器
 @post('/add_ser')
 def add_ser():
-    data = request.json
-    load_balance_svr_ins.protocol_add_web_svr(data)
+    load_balance_svr_ins.protocol_add_web_svr(request.json)
     return 
 
 # 设置服务器待处理消息数
 @post('/set_msg_num')
 def set_msg_num():
-    data = request.json
-    load_balance_svr_ins.protocol_set_msg_num(data)
+    load_balance_svr_ins.protocol_set_msg_num(request.json)
     return 
 
 # 客户端websvr连接失败
 @post('/web_svr_fail')
 def web_svr_fail():
-    return load_balance_svr_ins.protocol_web_svr_fail(data = request.json)
+    load_balance_svr_ins.protocol_web_svr_fail(request.json)
+    return 
 
 # 获取空闲服务器
-@get('/get_min_svr')
+@post('/get_min_svr')
 def get_min_svr():
-    return load_balance_svr_ins.protocol_get_min_svr()
+    return load_balance_svr_ins.protocol_get_min_svr(request.json)
 
 
 

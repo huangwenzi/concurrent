@@ -36,7 +36,7 @@ class WebSvr(object):
         self.load_balance_path = "http://{0}:{1}".format(load_balance_cfg["host"], load_balance_cfg["port"])
         self.task_count = 0
         self.t = ThreadPoolExecutor(2)
-        self.dbMgr = dbMd.get_ins()
+        self.dbMgr = dbMd.get_ins("")
         
         
     ## 获取函数
@@ -65,7 +65,8 @@ class WebSvr(object):
             # 通知负载均衡，服务器准备就绪
             headers = {'content-type':'application/json'}
             data = {
-                'svr_id' : web_svr.svr_id
+                "svr_type" : "web_svr"
+                , 'svr_id' : web_svr.svr_id
                 , 'host': web_svr.host
                 , 'port': web_svr.port
             }
@@ -91,7 +92,8 @@ class WebSvr(object):
             headers = {'content-type':'application/json'}
             while True:
                 data = {
-                    "svr_id" : web_svr.svr_id
+                    "svr_type" : "web_svr"
+                    , 'svr_id' : web_svr.svr_id
                     , "host" : web_svr.host
                     , "port" : web_svr.port
                     , "msg_num" : web_svr.msg_num

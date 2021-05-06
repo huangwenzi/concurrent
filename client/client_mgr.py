@@ -148,10 +148,10 @@ class ClientMgr(object):
     # 获取websvr信息给客户端任务
     def get_web_svr(self):
         # 从负载均衡获取服务器地址
-        send_str = "{0}/get_min_svr".format(self.load_balance_svr_path)
-        ret = request.Request(send_str)
-        response = request.urlopen(ret)
-        read_str = response.read().decode('utf-8')
+        headers = {'content-type':'application/json'}
+        data = {"svr_type" : "web_svr"}
+        response = requests.post("{0}/get_min_svr".format(self.load_balance_svr_path), data=json.dumps(data),headers=headers)
+        read_str = response.text
         # 是否获取失败
         if not read_str:
             return False
@@ -166,8 +166,10 @@ class ClientMgr(object):
         ret = response.read().decode('utf-8')
         if ret != "1":
             # 通知负载均衡
-            headers = {'content-type':'application/json'}
-            data = {"svr_id" : thread_task.svr_id}
+            data = {
+                "svr_type" : "web_svr"
+                , "svr_id" : thread_task.svr_id
+                }
             requests.post("{0}/web_svr_fail".format(self.load_balance_svr_path), data=json.dumps(data),headers=headers)
             return 
         return thread_task

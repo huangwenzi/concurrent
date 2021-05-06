@@ -7,6 +7,7 @@ import sys
 import web_svr.web_svr as WebSvrMd
 import lib.db as dbMd
 import config.net as netCfg
+import config.db_cfg as dbCfg
 
 
 # 获取配置
@@ -14,7 +15,7 @@ svr_id = sys.argv[1]
 cfg = netCfg.web_svr_cfg[svr_id]
 
 # 数据单例
-dbMgr = dbMd.get_ins(cfg["db_cfg"])
+dbMgr = dbMd.get_ins(dbCfg.db_map[cfg["db_cfg"]])
 # 服务器单例
 web_svr_ins = WebSvrMd.get_ins(cfg)
 
@@ -56,8 +57,8 @@ def svr_run():
     run(host=cfg["host"], port=cfg["port"], debug=True, reloader=True, server='paste')
     
     
-# py web_svr_main.py 服务器配置 数据库配置
-# py web_svr_main.py 1 web_svr
+# py web_svr_main.py 服务器配置
+# py web_svr_main.py 1
 svr_run()
 
 
