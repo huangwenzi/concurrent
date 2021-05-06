@@ -1,11 +1,6 @@
-from bottle import default_app, run, get, post, request
-from beaker.middleware import SessionMiddleware
-import sys
-import json
-import gevent
+from bottle import run, get, post, request
 from gevent import monkey
 monkey.patch_all()
-import requests # 必须在 monkey后
 
 import config.net as netCfg
 import load_balance_svr.load_balance_svr as loadBalanceSvrMd

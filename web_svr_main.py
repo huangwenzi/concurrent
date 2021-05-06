@@ -1,19 +1,23 @@
-from bottle import default_app, run, get, post, request
-import gevent
+from bottle import run, get, request
 from gevent import monkey
 monkey.patch_all()
-from beaker.middleware import SessionMiddleware
 import sys
-import requests
-import json
-import time
+
 
 import web_svr.web_svr as WebSvrMd
+import lib.db as dbMd
 import config.net as netCfg
 
 
+# 获取配置
+svr_id = sys.argv[1]
+cfg = netCfg.web_svr_cfg[svr_id]
+
+# 数据单例
+dbMgr = dbMd.get_ins(cfg["db_cfg"])
 # 服务器单例
-web_svr_ins = WebSvrMd.get_ins()
+web_svr_ins = WebSvrMd.get_ins(cfg)
+
 
 
 # 协议
@@ -43,11 +47,6 @@ session_opts = {
 
 # 函数主入口
 def svr_run():
-    # 获取配置
-    svr_id = sys.argv[1]
-    # cfg = netCfg.web_svr_cfg["1"]
-    cfg = netCfg.web_svr_cfg[svr_id]
-    
     # 通知负载均衡，服务器准备就绪
     web_svr_ins.connect_load_balance_thread()
     

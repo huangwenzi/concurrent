@@ -2,7 +2,7 @@ import MySQLdb
 import time
 
 
-import tool.db.db_tool as dbToolMd
+import tool.db_tool as dbToolMd
 import config.db_cfg as dbCfg
 
 

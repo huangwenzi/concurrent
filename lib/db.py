@@ -1,9 +1,7 @@
 import MySQLdb
-import sys
 
 
-import config.db_cfg as dbCfg
-import tool.db.db_tool as dbToolMd
+import tool.db_tool as dbToolMd
 import lib.instance_mgr as instanceMgrMd
 
 # mysql字符串类型
@@ -166,9 +164,8 @@ class DbMgr():
         return False
 
 # 获取单例
-def get_ins():
+def get_ins(cfg):
     if not instanceMgrMd.instance_mgr.get_ins("dbMgr"):
-        cfg = dbCfg.db_map[sys.argv[2]]
         db_mgr = DbMgr(cfg)
         instanceMgrMd.instance_mgr.set_ins("dbMgr", db_mgr)
         return db_mgr

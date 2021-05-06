@@ -1,4 +1,4 @@
-from urllib import request, parse
+from urllib import request
 import json
 import requests
 import time

@@ -1,8 +1,8 @@
 import time
-from concurrent.futures import ThreadPoolExecutor,wait
+from concurrent.futures import ThreadPoolExecutor
 import json
 import requests
-import sys
+
 
 
 
@@ -11,8 +11,7 @@ import lib.db as dbMd
 import lib.instance_mgr as instanceMgrMd
 import config.net as netCfg
 
-# 数据单例
-dbMgr = dbMd.get_ins()
+
 
 ## websvr服务器
 class WebSvr(object):
@@ -25,6 +24,7 @@ class WebSvr(object):
     t = None                # 线程池，两个，1个连接负载均衡， 1个同步待处理消息数
     
     task_count = 0          # 完成的任务计数
+    dbMgr = None            # 数据库单例
     
     def __init__(self, cfg):
         self.svr_id = cfg["svr_id"]
@@ -36,6 +36,7 @@ class WebSvr(object):
         self.load_balance_path = "http://{0}:{1}".format(load_balance_cfg["host"], load_balance_cfg["port"])
         self.task_count = 0
         self.t = ThreadPoolExecutor(2)
+        self.dbMgr = dbMd.get_ins()
         
         
     ## 获取函数
@@ -47,7 +48,7 @@ class WebSvr(object):
             numMd.consume_cpu_time_1(0.1)
             # time.sleep(1)
             key = query.key
-            val = dbMgr.select("test", key) or "None"
+            val = self.dbMgr.select("test", key) or "None"
             self.msg_num -= 1
             self.task_count += 1
             return val
@@ -111,9 +112,8 @@ class WebSvr(object):
     
     
 # 获取单例
-def get_ins():
+def get_ins(cfg):
     if not instanceMgrMd.instance_mgr.get_ins("web_svr"):
-        cfg = netCfg.web_svr_cfg[sys.argv[1]]
         web_svr = WebSvr(cfg)
         instanceMgrMd.instance_mgr.set_ins("web_svr", web_svr)
         return web_svr
