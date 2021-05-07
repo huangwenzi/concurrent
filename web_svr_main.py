@@ -1,21 +1,17 @@
-from bottle import run, get, request
+from bottle import run, get, post, request
 from gevent import monkey
 monkey.patch_all()
 import sys
 
 
 import web_svr.web_svr as WebSvrMd
-import lib.db as dbMd
 import config.net as netCfg
-import config.db_cfg as dbCfg
 
 
 # 获取配置
 svr_id = sys.argv[1]
 cfg = netCfg.web_svr_cfg[svr_id]
 
-# 数据单例
-dbMgr = dbMd.get_ins(dbCfg.db_map[cfg["db_cfg"]])
 # 服务器单例
 web_svr_ins = WebSvrMd.get_ins(cfg)
 
@@ -23,9 +19,9 @@ web_svr_ins = WebSvrMd.get_ins(cfg)
 
 # 协议
 # 获取值
-@get('/get_val')
+@post('/get_val')
 def get_val():
-    key = web_svr_ins.get_val(request.query)
+    key = web_svr_ins.get_val(request.json)
     return key
 
 # 客户端尝试连接

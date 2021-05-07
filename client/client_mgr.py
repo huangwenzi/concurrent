@@ -93,10 +93,19 @@ class ClientTask():
         
     # 获取数据
     def get(self, thread_task):
-        send_str = "%s/get_val?key=%s"%(thread_task.web_svr_path, self.fun_agv[0])
-        ret = request.Request(send_str)
-        response = request.urlopen(ret)
-        thread_task.ret = response.read().decode('utf-8')
+        headers = {'content-type':'application/json'}
+        data = {
+            "table_name" : self.fun_agv[0]
+            , "key" : self.fun_agv[1]
+        }
+        response = requests.post("{0}/get_val".format(thread_task.web_svr_path), data=json.dumps(data),headers=headers)
+        read_str = response.text
+        if not read_str:
+            print("get err, not read_str")
+            return
+        val = json.loads(read_str)
+        print(val)
+        thread_task.ret = val
     
 
 # 模拟客户端管理器
